@@ -343,7 +343,7 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
             if (resultReport.GetBodyLocationHitWeight(bodyPart) > 0)
             {
                 LocalizedString bodyPartName = new()
-                { LocalizationKey = $"CSFFCardDetailTooltip.BodyParts.{bodyPart}", DefaultText = bodyPart.ToString()};
+                { LocalizationKey = $"CSFFCardDetailTooltip.BodyParts.{bodyPart}", DefaultText = bodyPart.ToString() };
                 List<(Vector2, WoundSeverity)> mapping = woundMappings[(int)bodyPart];
                 IEnumerable<(WoundSeverity, float)> woundsProbs = from m in mapping
                                                                   where VectorMath.RangeIntersect(playerActionDamage, m.Item1).RangeLength() > 0
@@ -576,7 +576,7 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
             if (wounds[0].DroppedCards.Length == 0) return "";
             if (playerBodyLocationHit.GetBodyLocationHitWeight(bodyPart) > 0)
                 result.AppendLine(
-                    $"{new string(' ', indent)}{new LocalizedString { LocalizationKey = $"CSFFCardDetailTooltip.BodyParts.{bodyPart}", DefaultText = bodyPart.ToString()}.ToString()}({playerBodyLocationHit.GetBodyLocationHitWeight(bodyPart) / playerBodyLocationHit.TotalWeight * 100f:0.#}%): {wounds.Select(w => w.DroppedCards[0].CardName.ToString()).Join()} ({LcStr("CSFFCardDetailTooltip.Encounter.AttackDefenseRatio", "Attack-Defense Ratio")}: {currentRoundEnemyDamageReport.EnemyDamage}:{currentRoundEnemyDamageReport.PlayerDefense})");
+                    $"{new string(' ', indent)}{new LocalizedString { LocalizationKey = $"CSFFCardDetailTooltip.BodyParts.{bodyPart}", DefaultText = bodyPart.ToString() }.ToString()}({playerBodyLocationHit.GetBodyLocationHitWeight(bodyPart) / playerBodyLocationHit.TotalWeight * 100f:0.#}%): {wounds.Select(w => w.DroppedCards[0].CardName.ToString()).Join()} ({LcStr("CSFFCardDetailTooltip.Encounter.AttackDefenseRatio", "Attack-Defense Ratio")}: {currentRoundEnemyDamageReport.EnemyDamage}:{currentRoundEnemyDamageReport.PlayerDefense})");
         }
 
         return result.ToString();
@@ -884,17 +884,17 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
     public static string FormatWeaponStats(Vector2 clash, Vector2 damage, float reach, int indent = 0)
     {
         LocalizedString title = new()
-            { LocalizationKey = "CSFFCardDetailTooltip.WeaponStats", DefaultText = "Weapon Stats" };
+        { LocalizationKey = "CSFFCardDetailTooltip.WeaponStats", DefaultText = "Weapon Stats" };
         LocalizedString clashTitle = new()
-            { LocalizationKey = "CSFFCardDetailTooltip.WeaponStats.Clash", DefaultText = "Clash" };
+        { LocalizationKey = "CSFFCardDetailTooltip.WeaponStats.Clash", DefaultText = "Clash" };
         LocalizedString damageTitle = new()
-            { LocalizationKey = "CSFFCardDetailTooltip.WeaponStats.Damage", DefaultText = "Damage" };
+        { LocalizationKey = "CSFFCardDetailTooltip.WeaponStats.Damage", DefaultText = "Damage" };
         LocalizedString reachTitle = new()
-            { LocalizationKey = "CSFFCardDetailTooltip.WeaponStats.Reach", DefaultText = "Reach" };
+        { LocalizationKey = "CSFFCardDetailTooltip.WeaponStats.Reach", DefaultText = "Reach" };
 
         return $"{FormatBasicEntry(title, "", indent: indent)}\n" +
-               $"<size=75%>{FormatBasicEntry(FormatMinMaxValue(clash),clashTitle, indent: indent + 2)}\n" +
-               $"{FormatBasicEntry(FormatMinMaxValue(damage),damageTitle, indent: indent + 2)}\n" +
+               $"<size=75%>{FormatBasicEntry(FormatMinMaxValue(clash), clashTitle, indent: indent + 2)}\n" +
+               $"{FormatBasicEntry(FormatMinMaxValue(damage), damageTitle, indent: indent + 2)}\n" +
                $"{FormatBasicEntry(ColorFloat(reach), reachTitle, indent: indent + 2)}" +
                $"</size>";
     }
@@ -941,10 +941,10 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
         }
 
         LocalizedString title = new()
-            { LocalizationKey = "CSFFCardDetailTooltip.WeaponStats", DefaultText = "Weapon Stats" };
-        
+        { LocalizationKey = "CSFFCardDetailTooltip.WeaponStats", DefaultText = "Weapon Stats" };
+
         return $"{FormatBasicEntry(title, "", indent: indent)}\n" +
-               $"<size=75%>{texts.Join(delimiter:"\n")}</size>";
+               $"<size=75%>{texts.Join(delimiter: "\n")}</size>";
     }
 
     public static string TimeSpanFormat(TimeSpan ts)
@@ -973,7 +973,7 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
                 { LocalizationKey = "CSFFCardDetailTooltip.statOnFullTitle", DefaultText = "On Full" }
                     .ToString(), "", indent: 4);
                 CollectionDropReport collectionDropsReport =
-                    GameManager.Instance.GetCollectionDropsReport(stat.OnFull, currentCard, null, false);
+                    GameManager.Instance.GetCollectionDropsReport(stat.OnFull, currentCard, null, InGameNPCOrPlayer.PlayerAgent, false);
                 dropList = Action.FormatCardDropList(
                     collectionDropsReport, currentCard,
                     action: stat.OnFull, indent: 6);
@@ -994,7 +994,7 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
                 bool uniqueOnBoard = currentCard.CardModel.UniqueOnBoard;
                 if (currentCard.CardModel.CardType == CardTypes.Weather) currentCard.CardModel.UniqueOnBoard = false;
                 CollectionDropReport collectionDropsReport =
-                    GameManager.Instance.GetCollectionDropsReport(stat.OnZero, currentCard, null, false);
+                    GameManager.Instance.GetCollectionDropsReport(stat.OnZero, currentCard, null, InGameNPCOrPlayer.PlayerAgent, false);
                 currentCard.CardModel.UniqueOnBoard = uniqueOnBoard;
                 dropList = Action.FormatCardDropList(
                     collectionDropsReport, currentCard,

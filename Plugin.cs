@@ -193,7 +193,7 @@ namespace CSFFCardDetailTooltip
                         : __instance;
                 if (action.ProducedCards != null)
                 {
-                    CollectionDropReport dropReport = gm.GetCollectionDropsReport(action, currentCard, droppedCard, true);
+                    CollectionDropReport dropReport = gm.GetCollectionDropsReport(action, currentCard, droppedCard, InGameNPCOrPlayer.PlayerAgent, true);
                     texts.Add(Action.FormatCardDropList(dropReport, currentCard, action: action));
                 }
 
@@ -237,7 +237,7 @@ namespace CSFFCardDetailTooltip
                     {
                         CardOnCardAction cardOnCardAction = recipe.GetResult(cookingstatus.Card);
                         CollectionDropReport dropReport =
-                            gm.GetCollectionDropsReport(cardOnCardAction, __instance, null, true);
+                            gm.GetCollectionDropsReport(cardOnCardAction, __instance, null, InGameNPCOrPlayer.PlayerAgent, true);
                         texts.Add("<size=70%>" + Action.FormatCardDropList(dropReport, __instance, indent: 2) +
                                   "</size>");
                     }
