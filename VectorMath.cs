@@ -24,6 +24,6 @@ public static class VectorMath
 
     public static Vector2Int ToInt(this Vector2 vec)
     {
-        return new Vector2Int((int)vec.x, (int)vec.y);
+        return new Vector2Int(Mathf.RoundToInt(vec.x), Mathf.RoundToInt(vec.y));
     }
 }

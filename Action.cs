@@ -16,7 +16,7 @@ internal class Action
     public static void DismantleActionButtonOnHoverEnterPatch(DismantleActionButton __instance)
     {
         if (!Plugin.Enabled) return;
-        List<string> texts = new();
+        List<string> texts = [];
         GameManager gm = GameManager.Instance;
         CollectionDropReport dropReport = __instance.DropReport;
 
@@ -155,7 +155,7 @@ internal class Action
     public static string FormatCardDropList(CollectionDropReport report, InGameCardBase fromCard, bool withStat = true,
         bool withCard = true, bool withDuability = true, CardAction action = null, int indent = 0)
     {
-        List<string> texts = new();
+        List<string> texts = [];
         for (int i = 0; i < report.DropsInfo.Length; i++)
         {
             float dropRate = report.GetDropPercent(i, withStat, withCard, withDuability, InGameNPCOrPlayer.PlayerAgent);
@@ -245,7 +245,7 @@ internal class Action
 
             if (report.DropsInfo[i].StatMods != null)
             {
-                List<string> stateModTexts = new();
+                List<string> stateModTexts = [];
                 foreach (StatModifier statModifier in report.DropsInfo[i].StatMods)
                     stateModTexts.Add(FormatStatModifier(statModifier, 4 + indent));
                 if (stateModTexts.Count > 0)

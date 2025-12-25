@@ -9,17 +9,22 @@ namespace CSFFCardDetailTooltip;
 
 internal class Stat
 {
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(StatStatusGraphics), "Update")]
-    public static void StatStatusGraphicsPatch(StatStatusGraphics __instance)
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(TooltipProvider), "OnPointerEnter")]
+    public static void StatStatusGraphicsPatch(TooltipProvider __instance)
     {
-        if (Plugin.Enabled)
-            __instance.SetTooltip(__instance.Title,
-                $"{(string.IsNullOrWhiteSpace(__instance.ModelStatus.Description) ? "" : $"{__instance.ModelStatus.Description.ToString()}\n")}{FormatInGameStat(__instance.ModelStatus.ParentStat)}",
-                "");
+        if (__instance is not StatStatusGraphics stat) return;
+
+        if (!Plugin.Enabled)
+        {
+            __instance.SetTooltip(stat.ModelStatus.GameName, stat.ModelStatus.Description, "");
+        }
         else
-            //Reset the tool tip to the base game settings.
-            __instance.SetTooltip(__instance.ModelStatus.GameName, __instance.ModelStatus.Description, "");
+        {
+            __instance.SetTooltip(__instance.Title,
+                $"{(string.IsNullOrWhiteSpace(stat.ModelStatus.Description) ? "" : $"{stat.ModelStatus.Description}\n")}{FormatInGameStat(stat.ModelStatus.ParentStat)}",
+                "");
+        }
     }
 
     [HarmonyPrefix]
@@ -41,9 +46,9 @@ internal class Stat
 
     public static string FormatInGameStat(InGameStat stat)
     {
-        List<string> texts = new();
-        List<string> valueModsTexts = new();
-        List<string> rateModsTexts = new();
+        List<string> texts = [];
+        List<string> valueModsTexts = [];
+        List<string> rateModsTexts = [];
         if (stat.CurrentBaseValue != 0)
             valueModsTexts.Add(FormatBasicEntry($"{stat.CurrentBaseValue:0.##}",
                 new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Stat.Base", DefaultText = "Base" }.ToString(),
@@ -94,7 +99,7 @@ internal class Stat
 
         if (stat.StatModel.UsesNovelty && stat.StalenessValues.Count > 0)
         {
-            List<string> stalenessText = new();
+            List<string> stalenessText = [];
             foreach (var staleness in stat.StalenessValues)
             {
                 if (staleness.Quantity > -1 && stat.StatModel.StalenessMultiplier != 0)
@@ -102,7 +107,8 @@ internal class Stat
                         $"{Mathf.Pow(stat.StatModel.StalenessMultiplier, staleness.Quantity + 1):G3}x",
                         $"(est. {stat.StatModel.NoveltyCooldownDuration - gm.CurrentTickInfo.z + staleness.LastTick + Math.Max(0, staleness.Quantity) * stat.StatModel.NoveltyCooldownDuration}t) {staleness.ModifierSource}",
                         indent: 2));
-            };
+            }
+            ;
             if (stalenessText.Count > 0)
             {
                 texts.Add(FormatBasicEntry(

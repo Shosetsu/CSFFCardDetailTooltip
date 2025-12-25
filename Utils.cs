@@ -206,9 +206,9 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
                 _FromEncounter.EnemyHidden ? _ActionsList[i].EnemyHiddenWeightModifier : 0;
             result.Actions[i].PlayerHiddenWeightMod =
                 _FromEncounter.PlayerHidden ? _ActionsList[i].PlayerHiddenWeightModifier : 0;
-            result.Actions[i].StatWeightMods = new();
+            result.Actions[i].StatWeightMods = [];
             _ActionsList[i].GetStatWeightMods(_FromEncounter.EncounterModel, result.Actions[i].StatWeightMods);
-            result.Actions[i].CardWeightMods = new();
+            result.Actions[i].CardWeightMods = [];
             _ActionsList[i].GetCardWeightMods(result.Actions[i].CardWeightMods);
             result.Actions[i].ValuesWeightMods =
                 new EnemyValuesWeightModReport(_ActionsList[i].ValuesWeightModifiers, _FromEncounter);
@@ -282,11 +282,11 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
         resultReport.TrackingWeights.RLeg = encounter.CurrentEnemyBodyProbabilities.CurrentRLegProbModifier;
 
         // 计算各个部位的基础护甲
-        BodyLocations[] bodyParts = new[]
-        {
+        BodyLocations[] bodyParts =
+        [
             BodyLocations.Head, BodyLocations.Torso, BodyLocations.LArm, BodyLocations.RArm, BodyLocations.LLeg,
             BodyLocations.RLeg
-        };
+        ];
         float[] bodyPartArmors = new float[bodyParts.Length];
         BodyTemplate body = encounterModel.EnemyBodyTemplate;
         bodyPartArmors[(int)BodyLocations.Head] = body.Head.GetArmor(action.DamageTypes);
@@ -313,7 +313,7 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
         for (int i = 0; i < bodyParts.Length; i++)
             enemyDefenses[i] = sizeDefense + bodyPartArmors[i] + bodyPartArmorDefenses[i] + trackingDefenses[i];
 
-        List<List<(Vector2, WoundSeverity)>> woundMappings = new();
+        List<List<(Vector2, WoundSeverity)>> woundMappings = [];
         // 计算玩家伤害可造成的伤口
         for (int i = 0; i < bodyParts.Length; i++)
         {
@@ -430,10 +430,10 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
         PlayerBodyLocationSelectionReport playerBodyLocationHit = default;
         EncounterEnemyDamageReport currentRoundEnemyDamageReport = new();
 
-        BodyLocations[] bodyParts = {
+        BodyLocations[] bodyParts = [
             BodyLocations.Head, BodyLocations.Torso, BodyLocations.LArm, BodyLocations.RArm, BodyLocations.LLeg,
             BodyLocations.RLeg
-        };
+        ];
         float[] bodyPartArmors = new float[bodyParts.Length];
         float[] armors = new float[bodyParts.Length];
 
@@ -532,7 +532,7 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
         currentRoundEnemyDamageReport.StatsAddedDamage = action.AddedDamageFromStats(false);
 
         // 计算敌人可造成的伤口
-        List<List<Tuple<Vector2, WoundSeverity>>> woundMappings = new();
+        List<List<Tuple<Vector2, WoundSeverity>>> woundMappings = [];
         for (int i = 0; i < bodyParts.Length; i++)
         {
             List<WoundSeverityMappings> mappings = popup.WoundSeverityMappings.ToList();
@@ -563,7 +563,7 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
             WoundSeverity woundSeverity = popup.GenerateWoundSeverity(currentRoundEnemyDamageReport.EnemyDamage,
                 currentRoundEnemyDamageReport.PlayerDefense);
             currentRoundEnemyDamageReport.AttackSeverity = woundSeverity;
-            List<PlayerWound> wounds = new();
+            List<PlayerWound> wounds = [];
 #if MELON_LOADER
             action.PlayerWounds.GetWoundsForSeverity_il2cpp(woundSeverity, wounds);
             if (wounds.Count == 0)
@@ -629,7 +629,7 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
     public static string FormatCardOnCardAction(CardOnCardAction action, InGameCardBase recivingCard,
         InGameCardBase givenCard, int indent = 0)
     {
-        List<string> texts = new();
+        List<string> texts = [];
         string cardActionText = FormatCardAction(action, recivingCard, indent);
         if (!string.IsNullOrWhiteSpace(cardActionText)) texts.Add(cardActionText);
         CardStateChange stateChange = action.GivenCardChanges;
@@ -660,8 +660,8 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
 
     public static string FormatCardAction(CardAction action, InGameCardBase fromCard, int indent = 0)
     {
-        List<string> texts = new();
-        List<string> stateModTexts = new();
+        List<string> texts = [];
+        List<string> stateModTexts = [];
 
         if (action.UnmodifiedDaytimeCost != action.TotalDaytimeCost)
         {
@@ -708,7 +708,7 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
     }
     private static string FormatTimeCostModifiers(CardAction action, InGameCardBase fromCard, int indent)
     {
-        List<string> texts = new();
+        List<string> texts = [];
         if (action != null)
         {
             var gm = MBSingleton<GameManager>.Instance;
@@ -728,7 +728,7 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
     }
     private static string FormatStateChange(CardStateChange stateChange, InGameCardBase fromCard, int indent = 0)
     {
-        List<string> cardModTexts = new();
+        List<string> cardModTexts = [];
         if (stateChange.ModType == CardModifications.DurabilityChanges)
         {
             if (stateChange.SpoilageChange.magnitude != 0)
@@ -815,7 +815,7 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
     }
     public static string FormatActionDurationModifiers(ActionModifier modifier, int indent = 0)
     {
-        List<string> texts = new();
+        List<string> texts = [];
         if (modifier == null || modifier.AppliesTo == null || modifier.DurationModifier == 0) return "";
         foreach (var tag in modifier.AppliesTo)
         {
@@ -825,7 +825,7 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
     }
     public static string FormatStatModifier(StatModifier statModifier, int indent = 0)
     {
-        List<string> texts = new();
+        List<string> texts = [];
         if (statModifier.Stat != null)
         {
             if (statModifier.ValueModifier.magnitude != 0)
@@ -900,7 +900,7 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
     }
     public static string FormatWeaponStats(CardData card, int indent = 2)
     {
-        List<string> texts = new();
+        List<string> texts = [];
         if (card.IsWeapon)
         {
             texts.Add(FormatBasicEntry(FormatMinMaxValue(card.BaseClashValue),
@@ -1003,12 +1003,12 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
             }
         }
 
-        List<string> texts = new()
-        {
+        List<string> texts =
+        [
             FormatTooltipEntry(value,
                 $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Rate", DefaultText = "Rate" }.ToString()}<size=70%>{est}</size>",
                 2)
-        };
+        ];
         if (!string.IsNullOrWhiteSpace(statOnFullZeroTitle)) texts.Add(statOnFullZeroTitle);
         if (!string.IsNullOrWhiteSpace(dropList)) texts.Add(dropList);
         if (!string.IsNullOrWhiteSpace(statOnFullZeroText)) texts.Add(statOnFullZeroText);

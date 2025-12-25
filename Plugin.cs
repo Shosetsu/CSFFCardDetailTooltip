@@ -2,7 +2,6 @@
 using MelonLoader;
 #else
 using BepInEx;
-using BepInEx.Logging;
 #endif
 using System;
 using System.Collections.Generic;
@@ -160,16 +159,16 @@ namespace CSFFCardDetailTooltip
             if (!cardModel) return;
             GraphicsManager graphicsM = GraphicsManager.Instance;
             GameManager gm = GameManager.Instance;
-            List<string> baseSpoilageRate = new();
-            List<string> baseUsageRate = new();
-            List<string> baseFuelRate = new();
-            List<string> baseConsumableRate = new();
-            List<string> baseSpecial1Rate = new();
-            List<string> baseSpecial2Rate = new();
-            List<string> baseSpecial3Rate = new();
-            List<string> baseSpecial4Rate = new();
-            List<string> baseEvaporationRate = new();
-            List<string> texts = new();
+            List<string> baseSpoilageRate = [];
+            List<string> baseUsageRate = [];
+            List<string> baseFuelRate = [];
+            List<string> baseConsumableRate = [];
+            List<string> baseSpecial1Rate = [];
+            List<string> baseSpecial2Rate = [];
+            List<string> baseSpecial3Rate = [];
+            List<string> baseSpecial4Rate = [];
+            List<string> baseEvaporationRate = [];
+            List<string> texts = [];
 
             if (GameManager.DraggedCard)
             {
@@ -244,7 +243,7 @@ namespace CSFFCardDetailTooltip
                 }
             }
 
-            bool isShowWeightType = Array.IndexOf(new[] { CardTypes.Hand, CardTypes.Item, CardTypes.Location },
+            bool isShowWeightType = Array.IndexOf([CardTypes.Hand, CardTypes.Item, CardTypes.Location],
                 cardModel.CardType) > -1;
             if (isShowWeightType && (__instance.CurrentWeight(false) != 0 || cardModel.WeightReductionWhenEquipped != 0 ||
                                      (__instance.CardsInInventory != null && __instance.CardsInInventory.Count > 0)))
@@ -732,10 +731,13 @@ namespace CSFFCardDetailTooltip
             LastDragHoverCard = null;
         }
 
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(EquipmentButton), "Update")]
-        public static void EquipmentButtonUpdatePatch(EquipmentButton __instance)
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(TooltipProvider), "OnPointerEnter")]
+        public static void EquipmentButtonUpdatePatch(TooltipProvider __instance)
         {
+            if (__instance is not EquipmentButton) return;
+
             if (!Enabled)
             {
                 __instance.SetTooltip(LocalizedString.Equipment, null, null);
@@ -743,12 +745,13 @@ namespace CSFFCardDetailTooltip
             else
             {
                 if (InGamePlayerWeight == null)
+                {
                     InGamePlayerWeight = MBSingleton<GameManager>.Instance.InGamePlayerWeight;
-                else if (!(bool)GameManager.DraggedCard)
-                    __instance.SetTooltip(__instance.Title,
-                        FormatBasicEntry(
-                            $"{InGamePlayerWeight.SimpleCurrentValue}/{InGamePlayerWeight.StatModel.MinMaxValue.y}",
-                            "Weight"), null);
+                }
+                __instance.SetTooltip(__instance.Title,
+                    FormatBasicEntry(
+                        $"{InGamePlayerWeight.SimpleCurrentValue}/{InGamePlayerWeight.StatModel.MinMaxValue.y}",
+                        "Weight"), null);
             }
         }
 

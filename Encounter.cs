@@ -18,8 +18,8 @@ internal class Encounter
         if (popup == null) return;
         //int actionIndex = __instance.Index;
         //if (actionIndex < 0 || actionIndex > popup.GeneralPlayerActions.Length - 1) return;
-        List<string> texts = new();
-        if(__instance.SubActions.Count == 1)
+        List<string> texts = [];
+        if (__instance.SubActions.Count == 1)
             texts.Add(FormatEncounterPlayerAction(__instance.SubActions[0], popup));
 
         string newContent = texts.Join(delimiter: "\n");
@@ -42,18 +42,18 @@ internal class Encounter
         InGameEncounter encounter = __instance.CurrentEncounter;
         IEnumerable<string> actionTexts = encounter.EncounterModel.EnemyActions
             .Where(a => a is { DoesNotAttack: false }).Select(a => FormatEnemyHitResult(encounter, a, __instance, 1));
-        
+
         if (actionTexts.Any() && !actionTexts.All(string.IsNullOrEmpty))
         {
             __instance.AddToLog(new EncounterLogMessage
             {
                 LogText = new LocalizedString
-                    { LocalizationKey = "CSFFCardDetailTooltip.Encounter.PossibleWoundsHint", DefaultText = "If I am hit by an enemy, I might get hurt: (on average)" }
+                { LocalizationKey = "CSFFCardDetailTooltip.Encounter.PossibleWoundsHint", DefaultText = "If I am hit by an enemy, I might get hurt: (on average)" }
             });
             __instance.AddToLog(new EncounterLogMessage
             {
                 LogText = new LocalizedString
-                    { LocalizationKey = "IGNOREKEY", DefaultText = string.Join("\n", actionTexts) }
+                { LocalizationKey = "IGNOREKEY", DefaultText = string.Join("\n", actionTexts) }
             });
         }
         else
@@ -61,7 +61,7 @@ internal class Encounter
             __instance.AddToLog(new EncounterLogMessage
             {
                 LogText = new LocalizedString
-                    { LocalizationKey = "CSFFCardDetailTooltip.Encounter.ImpossibleWoundsHint", DefaultText = "I am confident it can't hurt me! (on average)" }
+                { LocalizationKey = "CSFFCardDetailTooltip.Encounter.ImpossibleWoundsHint", DefaultText = "I am confident it can't hurt me! (on average)" }
             });
         }
     }
@@ -88,7 +88,7 @@ internal class Encounter
                 new EncounterLogMessage
                 {
                     LogText = new LocalizedString
-                        { LocalizationKey = "IGNOREKEY", DefaultText = SeverityText(report.AttackSeverity) }
+                    { LocalizationKey = "IGNOREKEY", DefaultText = SeverityText(report.AttackSeverity) }
                 }
             );
     }
