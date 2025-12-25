@@ -11,25 +11,28 @@ internal class Encounter
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(TooltipProvider), "OnHoverEnter")]
-    public static void OnHoverEnter(EncounterOptionButton __instance)
+    public static void OnHoverEnter(TooltipProvider __instance)
     {
         if (!Plugin.Enabled) return;
+        if (__instance is not EncounterOptionButton ecob) return;
+
         EncounterPopup popup = __instance.GetComponentInParent<EncounterPopup>();
         if (popup == null) return;
         //int actionIndex = __instance.Index;
         //if (actionIndex < 0 || actionIndex > popup.GeneralPlayerActions.Length - 1) return;
         List<string> texts = [];
-        if (__instance.SubActions.Count == 1)
-            texts.Add(FormatEncounterPlayerAction(__instance.SubActions[0], popup));
+        if (ecob.SubActions.Count == 1)
+            texts.Add(FormatEncounterPlayerAction(ecob.SubActions[0], popup));
 
         string newContent = texts.Join(delimiter: "\n");
+
         if (!string.IsNullOrWhiteSpace(newContent))
         {
-            EncounterTooltip.TooltipTitle = __instance.Title;
-            string orgContent = __instance.MyTooltip == null ? "" : __instance.MyTooltip.TooltipContent;
+            EncounterTooltip.TooltipTitle = ecob.Title;
+            string orgContent = ecob.MyTooltip == null ? "" : ecob.MyTooltip.TooltipContent;
             EncounterTooltip.TooltipContent = orgContent + (string.IsNullOrEmpty(orgContent) ? "" : "\n") +
                                               "<size=70%>" + newContent + "</size>";
-            EncounterTooltip.HoldText = __instance.MyTooltip == null ? "" : __instance.MyTooltip.HoldText;
+            EncounterTooltip.HoldText = ecob.MyTooltip == null ? "" : ecob.MyTooltip.HoldText;
             Tooltip.AddTooltip(EncounterTooltip);
         }
     }
@@ -95,16 +98,18 @@ internal class Encounter
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(TooltipProvider), "OnHoverExit")]
-    public static void EncounterOptionButtonOnHoverExitPatch(EncounterOptionButton __instance)
+    public static void EncounterOptionButtonOnHoverExitPatch(TooltipProvider __instance)
     {
+        if (__instance is not EncounterOptionButton) return;
         Tooltip.RemoveTooltip(EncounterTooltip);
         Tooltip.Instance.TooltipContent.pageToDisplay = 1;
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(TooltipProvider), "OnDisable")]
-    public static void EncounterOptionButtonOnDisablePatch(EncounterOptionButton __instance)
+    public static void EncounterOptionButtonOnDisablePatch(TooltipProvider __instance)
     {
+        if (__instance is not EncounterOptionButton) return;
         Tooltip.RemoveTooltip(EncounterTooltip);
         Tooltip.Instance.TooltipContent.pageToDisplay = 1;
     }
