@@ -5,17 +5,17 @@
     <AssemblyName>CSFFCardDetailTooltip</AssemblyName>
     <Description>CSFF Card Detail Tooltip Mod (Formerly known as Detailed Card Progress)</Description>
     <Product>CSFFCardDetailTooltipMod</Product>
-    <Version>1.0.1</Version>
+    <Version>1.0.7</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <PackageId>space.cfan.CSFFCardDetailTooltip</PackageId>
-    <Authors>computerfan</Authors>
+    <Authors>computerfan, AstralSnow</Authors>
     <Copyright>MIT License Copyright © 2024 $(Authors)</Copyright>
-    <GameAssemblyPath Condition="'$(GameAssemblyPath)' == ''">Assembly\Game\Win</GameAssemblyPath>
+    <GameAssemblyPath Condition="'$(GameAssemblyPath)' == ''">E:\SteamLibrary\steamapps\common\Card Survival Fantasy Forest\Card Survival - Fantasy Forest_Data\Managed</GameAssemblyPath>
     <GameAssemblyPath Condition="'$(GameAssemblyPath)' != '' and ('$(Configuration)'=='Release-MelonLoader' or '$(Configuration)'=='Debug-MelonLoader')">android\managed</GameAssemblyPath>
     <MelonLoaderAssemblyPath Condition="'$(MelonLoaderAssemblyPath)' == ''">..\MelonLoader</MelonLoaderAssemblyPath>
     <AssemblyUnhollowerAssemblyPath Condition="'$(AssemblyUnhollowerAssemblyPath)' == ''">..\AssemblyUnhollower</AssemblyUnhollowerAssemblyPath>
-    <DebugType>Full</DebugType>
+
     <Configurations>Debug;Release;Release-MelonLoader;Debug-MelonLoader</Configurations>
     <RestoreAdditionalProjectSources>
       https://api.nuget.org/v3/index.json;
@@ -24,6 +24,11 @@
     </RestoreAdditionalProjectSources>
     <RootNamespace>CSFFCardDetailTooltip</RootNamespace>
   </PropertyGroup>
+
+<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <DebugType>full</DebugType>
+  <DebugSymbols>true</DebugSymbols>
+</PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-MelonLoader|AnyCPU'">
         <DefineConstants>TRACE;MELON_LOADER</DefineConstants>
