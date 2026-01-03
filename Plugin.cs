@@ -350,7 +350,12 @@ namespace CSFFCardDetailTooltip
 
             if (__instance.IsLiquidContainer && __instance.ContainedLiquid)
                 foreach (PassiveEffect effect in __instance.ContainedLiquid.PassiveEffects.Values)
-                    baseEvaporationRate.Add(FormatRateEntry(effect.LiquidRateModifier, effect.EffectName));
+                {
+                    if (effect.SpoilageRateModifier != 0)
+                        baseSpoilageRate.Add(FormatRateEntry(effect.SpoilageRateModifier, effect.EffectName));
+                    if (effect.LiquidRateModifier != 0)
+                        baseEvaporationRate.Add(FormatRateEntry(effect.LiquidRateModifier, effect.EffectName));
+                }
 
             CookingRecipe changeRecipe = GetRecipeForCard(__instance);
             CardStateChange? recipeStateChange = changeRecipe?.IngredientChanges;
