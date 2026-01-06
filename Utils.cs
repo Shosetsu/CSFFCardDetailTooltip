@@ -1034,4 +1034,10 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
     {
         return $"<indent={indent / 2.2:0.##}em><color=\"{s1Color}\">{s1}</color> {s2}</indent>";
     }
+
+    public static bool IsModLoaded(string assemblyName)
+    {
+        return AppDomain.CurrentDomain.GetAssemblies()
+            .Any(asm => asm.GetName().Name.Equals(assemblyName, StringComparison.OrdinalIgnoreCase));
+    }
 }

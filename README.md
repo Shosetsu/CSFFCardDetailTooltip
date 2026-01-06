@@ -70,5 +70,5 @@
 
 ## 1.0.8
 
-- 删除未支持的 WeatherCardInspectable 相关处理。
-- 删除背包按钮显示负重的相关处理，请使用[WikiMod](https://csff-db.uuppi.com/_WikiMod) 1.0.6 版本或更高版本代替。
+- 移除了对未支持的 `WeatherCardInspectable` 的处理。
+- 当检测到 [WikiMod](https://csff-db.uuppi.com/_WikiMod)时，自动禁用背包按钮中的负重显示；建议使用 WikiMod(1.0.6+) 查看更完整的负重信息。

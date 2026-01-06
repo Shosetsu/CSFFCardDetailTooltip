@@ -70,5 +70,5 @@ The configuration file can be found at `/BepInEx/config/CSFFCardDetailTooltip.cf
 
 ## 1.0.8
 
-- Removed unsupported `WeatherCardInspectable` handling.
-- Removed `EquipmentButton` tooltip features; please use [WikiMod](https://csff-db.uuppi.com/_WikiMod) v1.0.6 or higher.
+- Removed handling for unsupported `WeatherCardInspectable`.
+- Disabled Weight display in `EquipmentButton` tooltip when [WikiMod](https://csff-db.uuppi.com/_WikiMod) v1.0.6 or higher is loaded; full encumbrance info is available there.

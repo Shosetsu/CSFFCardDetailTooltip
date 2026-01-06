@@ -726,7 +726,7 @@ namespace CSFFCardDetailTooltip
             LastDragHoverCard = null;
         }
 
-        public static CookingRecipe GetRecipeForCard(InGameCardBase card)
+        private static CookingRecipe GetRecipeForCard(InGameCardBase card)
         {
             CookingRecipe recipeForCard;
             if (card.ContainedLiquid != null)
@@ -739,6 +739,26 @@ namespace CSFFCardDetailTooltip
                 (recipeForCard.IngredientChanges.ModType == CardModifications.DurabilityChanges ||
                  (card.ContainedLiquid && recipeForCard.IngredientChanges.ModifyLiquid))) return recipeForCard;
             return null;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(TooltipProvider), "OnPointerEnter")]
+        public static void EquipmentButtonUpdatePatch(TooltipProvider __instance)
+        {
+            if (__instance is not EquipmentButton || IsModLoaded("WikiMod")) return;
+
+            if (!Enabled)
+            {
+                __instance.SetTooltip(LocalizedString.Equipment, null, null);
+            }
+            else
+            {
+                var InGamePlayerWeight = MBSingleton<GameManager>.Instance.InGamePlayerWeight;
+                __instance.SetTooltip(__instance.Title,
+                    FormatBasicEntry(
+                        $"{InGamePlayerWeight.SimpleCurrentValue}/{InGamePlayerWeight.StatModel.MinMaxValue.y}",
+                        "Weight"), null);
+            }
         }
     }
 }
