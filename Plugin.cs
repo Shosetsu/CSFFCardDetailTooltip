@@ -33,10 +33,8 @@ namespace CSFFCardDetailTooltip
 #endif
     {
         public static TooltipText MyTooltip = new();
-        public static InGameStat InGamePlayerWeight;
         public static bool Enabled;
         public static KeyCode HotKey;
-        public static bool WeatherCardInspectable;
         public static bool RecipesShowTargetDuration;
         public static bool HideImpossibleDropSet;
         public static KeyCode TooltipNextPageHotKey;
@@ -51,7 +49,6 @@ namespace CSFFCardDetailTooltip
 #if MELON_LOADER
         private MelonPreferences_Category GeneralPreferencesCategory;
         private MelonPreferences_Category TweakPreferencesCategory;
-        private MelonPreferences_Entry<bool> WeatherCardInspectableEntry;
         private MelonPreferences_Entry<bool> EnabledEntry;
         private MelonPreferences_Entry<KeyCode> HotKeyEntry;
         private MelonPreferences_Entry<bool> RecipesShowTargetDurationEntry;
@@ -68,8 +65,6 @@ namespace CSFFCardDetailTooltip
  GeneralPreferencesCategory.CreateEntry(nameof(Enabled), true, "If true, will show the tool tips.");
             HotKeyEntry =
  GeneralPreferencesCategory.CreateEntry(nameof(HotKey), KeyCode.F2, "The key to enable and disable the tool tips");
-            WeatherCardInspectableEntry =
- GeneralPreferencesCategory.CreateEntry(nameof(WeatherCardInspectable), true, "If true, will make weather card inspect-able");
             RecipesShowTargetDurationEntry =
  TweakPreferencesCategory.CreateEntry(nameof(RecipesShowTargetDuration), false, "If true, will show the target duration of recipes");
             HideImpossibleDropSetEntry =
@@ -81,7 +76,6 @@ namespace CSFFCardDetailTooltip
                 false, "If true, stats like Bacteria Fever are forced to be inspectable.");
             Enabled = EnabledEntry.Value; 
             HotKey = HotKeyEntry.Value;
-            WeatherCardInspectable = WeatherCardInspectableEntry.Value;
             RecipesShowTargetDuration = RecipesShowTargetDurationEntry.Value;
             HideImpossibleDropSet = HideImpossibleDropSetEntry.Value;
             AdditionalEncounterLogMessage = AdditionalEncounterLogMessageEntry.Value;
@@ -109,9 +103,6 @@ namespace CSFFCardDetailTooltip
             Enabled = Config.Bind("General", nameof(Enabled), true, "If true, will show the tool tips.").Value;
             HotKey = Config.Bind("General", nameof(HotKey), KeyCode.F2, "The key to enable and disable the tool tips")
                 .Value;
-            WeatherCardInspectable = Config.Bind("General", nameof(WeatherCardInspectable), true,
-                    "If true, the weather card on the left side of the clock can be clicked to inspect. True is required for showing tooltip on it.")
-                .Value;
             RecipesShowTargetDuration = Config.Bind("Tweak", nameof(RecipesShowTargetDuration), false,
                 "If true, cookers like traps will show exact cooking duration instead of a range.").Value;
             HideImpossibleDropSet = Config.Bind("Tweak", nameof(HideImpossibleDropSet), true,
@@ -131,7 +122,6 @@ namespace CSFFCardDetailTooltip
             Harmony.CreateAndPatchAll(typeof(Action));
             Harmony.CreateAndPatchAll(typeof(Locale));
             Harmony.CreateAndPatchAll(typeof(TooltipMod));
-            Harmony.CreateAndPatchAll(typeof(PrefabMod));
             Harmony.CreateAndPatchAll(typeof(Encounter));
 
             Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
@@ -734,37 +724,6 @@ namespace CSFFCardDetailTooltip
         public static void InGameDraggableCardOnEndDragPatch(InGameDraggableCard __instance)
         {
             LastDragHoverCard = null;
-        }
-
-
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(TooltipProvider), "OnPointerEnter")]
-        public static void EquipmentButtonUpdatePatch(TooltipProvider __instance)
-        {
-            if (__instance is not EquipmentButton) return;
-
-            if (!Enabled)
-            {
-                __instance.SetTooltip(LocalizedString.Equipment, null, null);
-            }
-            else
-            {
-                if (InGamePlayerWeight == null)
-                {
-                    InGamePlayerWeight = MBSingleton<GameManager>.Instance.InGamePlayerWeight;
-                }
-                __instance.SetTooltip(__instance.Title,
-                    FormatBasicEntry(
-                        $"{InGamePlayerWeight.SimpleCurrentValue}/{InGamePlayerWeight.StatModel.MinMaxValue.y}",
-                        "Weight"), null);
-            }
-        }
-
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(EquipmentButton), "OnDisable")]
-        public static void EquipmentButtonOnDisablePatch()
-        {
-            InGamePlayerWeight = null;
         }
 
         public static CookingRecipe GetRecipeForCard(InGameCardBase card)

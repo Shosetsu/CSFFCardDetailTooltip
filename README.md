@@ -24,23 +24,21 @@
 
 配置文件位于：`/BepInEx/config/CSFFCardDetailTooltip.cfg`
 
-| 名称                          | 默认值   | 说明                                                                  |
-| ----------------------------- | -------- | --------------------------------------------------------------------- |
-| Enabled                       | true     | 启用后将显示详细提示信息                                              |
-| HotKey                        | F2       | 切换提示信息显示状态的快捷键                                          |
-| WeatherCardInspectable        | true     | 若为 true，时钟左侧的天气卡牌可被点击查看；需设为 true 才能显示其提示 |
-| RecipesShowTargetDuration     | false    | 若为 true，陷阱等制作装置将显示精确处理时间而非范围                   |
-| HideImpossibleDropSet         | true     | 若为 true，将隐藏不可能掉落的物品组合                                 |
-| TooltipNextPageHotKey         | 右方括号 | 显示提示下一页的快捷键                                                |
-| TooltipPreviousPageHotKey     | 左方括号 | 显示提示上一页的快捷键                                                |
-| AdditionalEncounterLogMessage | false    | 若为 true，战斗遭遇事件的消息日志中将显示额外提示                     |
-| ForceInspectStatInfos         | false    | 若为 true，强制使“细菌热”等状态可被检查                               |
+| 名称                          | 默认值   | 说明                                                |
+| ----------------------------- | -------- | --------------------------------------------------- |
+| Enabled                       | true     | 启用后将显示详细提示信息                            |
+| HotKey                        | F2       | 切换提示信息显示状态的快捷键                        |
+| RecipesShowTargetDuration     | false    | 若为 true，陷阱等制作装置将显示精确处理时间而非范围 |
+| HideImpossibleDropSet         | true     | 若为 true，将隐藏不可能掉落的物品组合               |
+| TooltipNextPageHotKey         | 右方括号 | 显示提示下一页的快捷键                              |
+| TooltipPreviousPageHotKey     | 左方括号 | 显示提示上一页的快捷键                              |
+| AdditionalEncounterLogMessage | false    | 若为 true，战斗遭遇事件的消息日志中将显示额外提示   |
+| ForceInspectStatInfos         | false    | 若为 true，强制使“细菌热”等状态可被检查             |
 
 **切换提示说明**：使用快捷键启用或禁用详细提示后，当前悬停的卡牌提示不会立即更新，需移开鼠标后再重新悬停才会生效。
 
 # 已知问题
 
-- 即使 `WeatherCardInspectable` 设为 true，天气卡仍可能无法显示详情。
 - 尚未完全适配 CSFF 的新战斗系统。
 - 可能存在部分文字排版或拼写问题。
 
@@ -69,3 +67,8 @@
 ## 1.0.7
 
 - 修复液体容器详情中 SpoilageRateModifier 未正确处理的问题。
+
+## 1.0.8
+
+- 删除未支持的 WeatherCardInspectable 相关处理。
+- 删除背包按钮显示负重的相关处理，请使用[WikiMod](https://csff-db.uuppi.com/_WikiMod) 1.0.6 版本或更高版本代替。

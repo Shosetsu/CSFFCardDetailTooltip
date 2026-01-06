@@ -5,7 +5,7 @@
 
 This mod shows card status and progress related details in tooltip.
 
-![Preview](pic/screenshot1.png)
+[Preview](pic/screenshot1.png)
 
 # Usage
 
@@ -24,23 +24,21 @@ See <https://docs.bepinex.dev/v5.4.21/articles/user_guide/installation/index.htm
 
 The configuration file can be found at `/BepInEx/config/CSFFCardDetailTooltip.cfg`
 
-| Name                          | Default      | Description                                                                                                                    |
-| ----------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------ |
-| Enabled                       | true         | If set to true, will show the details tooltips                                                                                 |
-| HotKey                        | F2           | The key to enable and disable the tool tips                                                                                    |
-| WeatherCardInspectable        | true         | If true, the weather card on the left side of the clock can be clicked to inspect. True is required for showing tooltip on it. |
-| RecipesShowTargetDuration     | false        | If true, cookers like traps will show exact cooking duration instead of a range.                                               |
-| HideImpossibleDropSet         | true         | If true, impossible drop sets will be hidden.                                                                                  |
-| TooltipNextPageHotKey         | RightBracket | The key to show next page of the tool tip.                                                                                     |
-| TooltipPreviousPageHotKey     | LeftBracket  | The key to show previous page of the tool tip.                                                                                 |
-| AdditionalEncounterLogMessage | false        | If true, shows additional tips in the message log of combat encounter.                                                         |
-| ForceInspectStatInfos         | false        | If true, stats like Bacteria Fever are forced to be inspectable.                                                               |
+| Name                          | Default      | Description                                                                      |
+| ----------------------------- | ------------ | -------------------------------------------------------------------------------- |
+| Enabled                       | true         | If set to true, will show the details tooltips                                   |
+| HotKey                        | F2           | The key to enable and disable the tool tips                                      |
+| RecipesShowTargetDuration     | false        | If true, cookers like traps will show exact cooking duration instead of a range. |
+| HideImpossibleDropSet         | true         | If true, impossible drop sets will be hidden.                                    |
+| TooltipNextPageHotKey         | RightBracket | The key to show next page of the tool tip.                                       |
+| TooltipPreviousPageHotKey     | LeftBracket  | The key to show previous page of the tool tip.                                   |
+| AdditionalEncounterLogMessage | false        | If true, shows additional tips in the message log of combat encounter.           |
+| ForceInspectStatInfos         | false        | If true, stats like Bacteria Fever are forced to be inspectable.                 |
 
 **Toggle Note**: When using the hotkey to enable/disable the detailed tooltips, the tooltips will not be updated until the user moves the mouse off of a card.
 
 # Known Issues
 
-- Weather card will not show details even if `WeatherCardInspectable` is set to true.
 - Not fully adapted to the new CSFF combat system.
 - May be some typographical issues.
 
@@ -69,3 +67,8 @@ The configuration file can be found at `/BepInEx/config/CSFFCardDetailTooltip.cf
 ## 1.0.7
 
 - Fixed missing SpoilageRateModifier handling in liquid container details.
+
+## 1.0.8
+
+- Removed unsupported `WeatherCardInspectable` handling.
+- Removed `EquipmentButton` tooltip features; please use [WikiMod](https://csff-db.uuppi.com/_WikiMod) v1.0.6 or higher.
