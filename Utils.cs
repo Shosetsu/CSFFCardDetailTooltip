@@ -1035,9 +1035,18 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
         return $"<indent={indent / 2.2:0.##}em><color=\"{s1Color}\">{s1}</color> {s2}</indent>";
     }
 
-    public static bool IsModLoaded(string assemblyName)
+    private static readonly Dictionary<string, bool> _compatCache = [];
+
+    public static bool IsModCompatible(string assemblyName, Version minVersion)
     {
-        return AppDomain.CurrentDomain.GetAssemblies()
-            .Any(asm => asm.GetName().Name.Equals(assemblyName, StringComparison.OrdinalIgnoreCase));
+        if (_compatCache.TryGetValue(assemblyName, out bool cached))
+            return cached;
+
+        var asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name.Equals(assemblyName, StringComparison.OrdinalIgnoreCase));
+
+        bool result = asm != null && asm.GetName().Version >= minVersion;
+        _compatCache[assemblyName] = result;
+
+        return result;
     }
 }

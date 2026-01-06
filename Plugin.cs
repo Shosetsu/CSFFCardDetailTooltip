@@ -745,7 +745,7 @@ namespace CSFFCardDetailTooltip
         [HarmonyPatch(typeof(TooltipProvider), "OnPointerEnter")]
         public static void EquipmentButtonUpdatePatch(TooltipProvider __instance)
         {
-            if (__instance is not EquipmentButton || IsModLoaded("WikiMod")) return;
+            if (__instance is not EquipmentButton || IsModCompatible("WikiMod", new Version(1, 0, 6))) return;
 
             if (!Enabled)
             {

@@ -5,7 +5,7 @@
     <AssemblyName>CSFFCardDetailTooltip</AssemblyName>
     <Description>CSFF Card Detail Tooltip Mod (Formerly known as Detailed Card Progress)</Description>
     <Product>CSFFCardDetailTooltipMod</Product>
-    <Version>1.0.8</Version>
+    <Version>1.0.8.1</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <PackageId>space.cfan.CSFFCardDetailTooltip</PackageId>

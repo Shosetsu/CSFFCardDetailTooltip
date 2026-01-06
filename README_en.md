@@ -37,11 +37,6 @@ The configuration file can be found at `/BepInEx/config/CSFFCardDetailTooltip.cf
 
 **Toggle Note**: When using the hotkey to enable/disable the detailed tooltips, the tooltips will not be updated until the user moves the mouse off of a card.
 
-# Known Issues
-
-- Not fully adapted to the new CSFF combat system.
-- May be some typographical issues.
-
 # Change Log
 
 ## 1.0.0
