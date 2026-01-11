@@ -663,9 +663,9 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
         List<string> texts = [];
         List<string> stateModTexts = [];
 
-        if (action.UnmodifiedDaytimeCost != action.TotalDaytimeCost)
+        string timeModText = FormatTimeCostModifiers(action, fromCard, indent);
+        if (timeModText != "")
         {
-            string timeModText = FormatTimeCostModifiers(action, fromCard, indent);
             texts.Add(FormatBasicEntry(new LocalizedString()
             {
                 LocalizationKey = "CSFFCardDetailTooltip.TimeCostModifiers",
@@ -706,26 +706,82 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
 
         return texts.Join(delimiter: "\n");
     }
-    private static string FormatTimeCostModifiers(CardAction action, InGameCardBase fromCard, int indent)
+
+    private static string FormatTimeCostModifiers(CardAction action, InGameCardBase _ReceivingCard, int indent)
     {
-        List<string> texts = [];
-        if (action != null)
+        if (action == null) return "";
+        List<ActionModifier> list = [];
+        GameManager gm = MBSingleton<GameManager>.Instance;
+
+        if (gm.CurrentActionModifiers != null && gm.CurrentActionModifiers.Count > 0)
         {
-            var gm = MBSingleton<GameManager>.Instance;
-            if (gm.CurrentActionModifiers != null && gm.CurrentActionModifiers.Count > 0)
+            for (int i = 0; i < gm.CurrentActionModifiers.Count; i++)
             {
-                for (int i = 0; i < gm.CurrentActionModifiers.Count; i++)
+                var cur = gm.CurrentActionModifiers[i];
+                if (cur.DurationModifier != 0 && cur.AppliesToAction(action, gm.NotInBase, _ReceivingCard, null))
                 {
-                    var cur = gm.CurrentActionModifiers.get_Item(i);
-                    if (cur.AppliesToAction(action, gm.NotInBase, fromCard, null) && cur.DurationModifier != 0)
+                    list.Add(cur);
+                }
+            }
+        }
+
+        if (action.BpActionModifiers != null)
+        {
+            for (int k = 0; k < action.BpActionModifiers.Count; k++)
+            {
+                if (action.BpActionModifiers[k]?.DurationModifier != 0 && action.BpActionModifiers[k].AppliesToAction(action, gm.NotInBase, _ReceivingCard, null))
+                {
+                    list.Add(action.BpActionModifiers[k]);
+                }
+            }
+        }
+
+        if ((bool)_ReceivingCard && (bool)_ReceivingCard.CardModel)
+        {
+            if (_ReceivingCard.CardModel.ActionModifiers != null)
+            {
+                for (int l = 0; l < _ReceivingCard.CardModel.ActionModifiers.Length; l++)
+                {
+                    if (_ReceivingCard.CardModel.ActionModifiers[l]?.DurationModifier != 0 && _ReceivingCard.CardModel.ActionModifiers[l].AppliesToAction(action, gm.NotInBase, _ReceivingCard, null))
                     {
-                        texts.Add(FormatBasicEntry($"{ColorFloat(cur.DurationModifier)}", $"{cur.Source}", indent: indent + 2));
+                        list.Add(_ReceivingCard.CardModel.ActionModifiers[l]);
+                    }
+                }
+            }
+
+            CardTag[] cardTags = _ReceivingCard.CardModel.CardTags;
+            if (cardTags != null && cardTags.Length != 0)
+            {
+                for (int m = 0; m < cardTags.Length; m++)
+                {
+                    if (!cardTags[m] || cardTags[m].ActionModifiers == null || cardTags[m].ActionModifiers.Length == 0)
+                    {
+                        continue;
+                    }
+
+                    for (int n = 0; n < cardTags[m].ActionModifiers.Length; n++)
+                    {
+                        if (cardTags[m].ActionModifiers[n]?.DurationModifier != 0 && cardTags[m].ActionModifiers[n].AppliesToAction(action, gm.NotInBase, _ReceivingCard, null))
+                        {
+                            list.Add(cardTags[m].ActionModifiers[n]);
+                        }
                     }
                 }
             }
         }
-        return texts.Join(delimiter: "\n");
+        return list.ConvertAll((mod) =>
+        {
+            string label = mod.ActionAddedSuffix;
+            if (label.Trim() == "")
+            {
+                label = DefaultModifySource;
+            }
+            return FormatBasicEntry($"{ColorFloat(mod.DurationModifier)}", label, indent: indent + 2);
+        }).Join(delimiter: "\n");
     }
+
+    private static LocalizedString DefaultModifySource = new() { LocalizationKey = "CSFFCardDetailTooltip.NoNameModifier", DefaultText = "Unknown Modifier" };
+
     private static string FormatStateChange(CardStateChange stateChange, InGameCardBase fromCard, int indent = 0)
     {
         List<string> cardModTexts = [];

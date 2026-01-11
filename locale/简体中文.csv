@@ -26,6 +26,7 @@ CSFFCardDetailTooltip.h,,时
 CSFFCardDetailTooltip.LiquidQuantityChange,,液体量
 CSFFCardDetailTooltip.StatModifier,,状态修正
 CSFFCardDetailTooltip.TimeCostModifiers,,时间消耗影响
+CSFFCardDetailTooltip.NoNameModifier,,未命名修正
 CSFFCardDetailTooltip.CardStateChange,,卡牌状态变更
 CSFFCardDetailTooltip.Action.CardDrops,,卡牌掉落
 CSFFCardDetailTooltip.TransformInto,,转变为

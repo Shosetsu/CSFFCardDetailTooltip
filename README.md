@@ -67,3 +67,8 @@ The configuration file can be found at `/BepInEx/config/CSFFCardDetailTooltip.cf
 
 - Removed handling for unsupported `WeatherCardInspectable`.
 - Disabled Weight display in `EquipmentButton` tooltip when [WikiMod](https://csff-db.uuppi.com/_WikiMod) v1.0.6 or higher is loaded; full encumbrance info is available there.
+
+## 1.0.9
+
+- Refined the display logic for the Time Cost Modifiers to improve clarity and readability.
+- Removed the novelty countdown timer from permanently decaying stats, as these modifier do not actually expire—eliminating potential user confusion.
