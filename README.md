@@ -72,3 +72,7 @@ The configuration file can be found at `/BepInEx/config/CSFFCardDetailTooltip.cf
 
 - Refined the display logic for the Time Cost Modifiers to improve clarity and readability.
 - Removed the novelty countdown timer from permanently decaying stats, as these modifier do not actually expire—eliminating potential user confusion.
+
+## 1.0.10
+
+- Added support for displaying Multiply Modifiers.

@@ -101,16 +101,14 @@ internal class Stat
         {
             List<string> stalenessText = [];
             foreach (var staleness in stat.StalenessValues)
-            {
                 if (staleness.Quantity > -1 && stat.StatModel.StalenessMultiplier != 0)
                     stalenessText.Add(FormatBasicEntry(
                         $"{Mathf.Pow(stat.StatModel.StalenessMultiplier, staleness.Quantity + 1):G3}x",
-                       stat.StatModel.NoveltyCooldownDuration > 0
-                       ? $"(est. {stat.StatModel.NoveltyCooldownDuration - gm.CurrentTickInfo.z + staleness.LastTick + Math.Max(0, staleness.Quantity) * stat.StatModel.NoveltyCooldownDuration}t) {staleness.ModifierSource}"
+                        stat.StatModel.NoveltyCooldownDuration > 0
+                        ? $"(est. {stat.StatModel.NoveltyCooldownDuration - gm.CurrentTickInfo.z + staleness.LastTick + Math.Max(0, staleness.Quantity) * stat.StatModel.NoveltyCooldownDuration}t) {staleness.ModifierSource}"
                         : staleness.ModifierSource,
                         indent: 2));
-            }
-            ;
+
             if (stalenessText.Count > 0)
             {
                 texts.Add(FormatBasicEntry(

@@ -25,11 +25,11 @@ internal class Locale
         using Stream stream = Assembly.GetExecutingAssembly()
             .GetManifestResourceStream($"CSFFCardDetailTooltip.locale.{langSetting.LanguageName}.csv");
         if (stream == null || !stream.CanRead) return;
-        using StreamReader reader = new StreamReader(stream);
+        using StreamReader reader = new(stream);
         string localizationString = reader.ReadToEnd();
         var dictionary = CSVParser.LoadFromString(localizationString, Delimiter.Comma);
 
-        Regex regex = new Regex("\\\\n");
+        Regex regex = new("\\\\n");
         Dictionary<string, string> currentTexts = LocalizationManager.CurrentTexts;
         foreach (var item in dictionary)
             if (!currentTexts.ContainsKey(item.Key) && item.Value.Count >= 2)

@@ -287,7 +287,7 @@ namespace CSFFCardDetailTooltip
                             if (__instance.CardsInInventory.get_Item(i) != null &&
                                 !__instance.CardsInInventory.get_Item(i).IsFree)
                                 texts.Add(FormatTooltipEntry(__instance.CardsInInventory.get_Item(i).CurrentWeight,
-                                    $"{__instance.CardsInInventory.get_Item(i).CardAmt}x {__instance.CardsInInventory.get_Item(i).MainCard.CardModel.CardName.ToString()}",
+                                    $"{__instance.CardsInInventory.get_Item(i).CardAmt}x {__instance.CardsInInventory.get_Item(i).MainCard.CardModel.CardName}",
                                     4));
                     }
 
@@ -300,7 +300,7 @@ namespace CSFFCardDetailTooltip
                             }, 4));
                     else if (cardModel.ContentWeightReduction != 0)
                         texts.Add(FormatTooltipEntry(cardModel.ContentWeightReduction,
-                            $"{cardModel.CardName.ToString()} {new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Reduction", DefaultText = "Reduction" }.ToString()}",
+                            $"{cardModel.CardName} {new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Reduction", DefaultText = "Reduction" }}",
                             4));
                 }
             }
@@ -314,11 +314,11 @@ namespace CSFFCardDetailTooltip
                     : effect.EffectName;
                 if ((bool)cardModel.SpoilageTime && (bool)effect.SpoilageRateModifier)
                     baseSpoilageRate.Add(FormatRateEntry(multiplier * effect.SpoilageRateModifier.FloatValue,
-                        entryValue));
+                        entryValue, effect.MultiplySpoilageRate));
                 if ((bool)cardModel.UsageDurability && (bool)effect.UsageRateModifier)
-                    baseUsageRate.Add(FormatRateEntry(multiplier * effect.UsageRateModifier.FloatValue, entryValue));
+                    baseUsageRate.Add(FormatRateEntry(multiplier * effect.UsageRateModifier.FloatValue, entryValue, effect.MultiplyUsageRate));
                 if ((bool)cardModel.FuelCapacity && (bool)effect.FuelRateModifier)
-                    baseFuelRate.Add(FormatRateEntry(multiplier * effect.FuelRateModifier.FloatValue, entryValue));
+                    baseFuelRate.Add(FormatRateEntry(multiplier * effect.FuelRateModifier.FloatValue, entryValue, effect.MultiplyFuelRate));
                 if ((bool)cardModel.Progress && (bool)effect.ConsumableChargesModifier)
                     baseConsumableRate.Add(FormatRateEntry(multiplier * effect.ConsumableChargesModifier.FloatValue,
                         entryValue));
@@ -326,23 +326,23 @@ namespace CSFFCardDetailTooltip
                     baseEvaporationRate.Add(FormatRateEntry(multiplier * effect.LiquidRateModifier, entryValue));
                 if ((bool)cardModel.SpecialDurability1 && (bool)effect.Special1RateModifier)
                     baseSpecial1Rate.Add(FormatRateEntry(multiplier * effect.Special1RateModifier.FloatValue,
-                        entryValue));
+                        entryValue, effect.MultiplySpecial1Rate));
                 if ((bool)cardModel.SpecialDurability2 && (bool)effect.Special2RateModifier)
                     baseSpecial2Rate.Add(FormatRateEntry(multiplier * effect.Special2RateModifier.FloatValue,
-                        entryValue));
+                        entryValue, effect.MultiplySpecial2Rate));
                 if ((bool)cardModel.SpecialDurability3 && (bool)effect.Special3RateModifier)
                     baseSpecial3Rate.Add(FormatRateEntry(multiplier * effect.Special3RateModifier.FloatValue,
-                        entryValue));
+                        entryValue, effect.MultiplySpecial3Rate));
                 if ((bool)cardModel.SpecialDurability4 && (bool)effect.Special4RateModifier)
                     baseSpecial4Rate.Add(FormatRateEntry(multiplier * effect.Special4RateModifier.FloatValue,
-                        entryValue));
+                        entryValue, effect.MultiplySpecial4Rate));
             }
 
             if (__instance.IsLiquidContainer && __instance.ContainedLiquid)
                 foreach (PassiveEffect effect in __instance.ContainedLiquid.PassiveEffects.Values)
                 {
                     if (effect.SpoilageRateModifier != 0)
-                        baseSpoilageRate.Add(FormatRateEntry(effect.SpoilageRateModifier, effect.EffectName));
+                        baseSpoilageRate.Add(FormatRateEntry(effect.SpoilageRateModifier, effect.EffectName, effect.MultiplySpoilageRate));
                     if (effect.LiquidRateModifier != 0)
                         baseEvaporationRate.Add(FormatRateEntry(effect.LiquidRateModifier, effect.EffectName));
                 }
@@ -384,7 +384,7 @@ namespace CSFFCardDetailTooltip
                         { LocalizationKey = "CSFFCardDetailTooltip.Equipped", DefaultText = "Equipped" }));
                 if ((recipeStateChange?.SpoilageChange.x ?? 0) != 0)
                     texts.Add(FormatRateEntry(recipeStateChange?.SpoilageChange.x ?? 0,
-                        $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Recipe", DefaultText = "Recipe" }.ToString()} {changeRecipe.ActionName}"));
+                        $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Recipe", DefaultText = "Recipe" }} {changeRecipe.ActionName}"));
             }
 
             // liquid spoilage temp fix
@@ -424,7 +424,7 @@ namespace CSFFCardDetailTooltip
                         { LocalizationKey = "CSFFCardDetailTooltip.Equipped", DefaultText = "Equipped" }));
                 if ((recipeStateChange?.SpoilageChange.x ?? 0) != 0)
                     texts.Add(FormatRateEntry(recipeStateChange?.SpoilageChange.x ?? 0,
-                        $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Recipe", DefaultText = "Recipe" }.ToString()} {changeRecipe.ActionName}"));
+                        $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Recipe", DefaultText = "Recipe" }} {changeRecipe.ActionName}"));
             }
 
             if (cardModel.UsageDurability &&
@@ -462,7 +462,7 @@ namespace CSFFCardDetailTooltip
                         { LocalizationKey = "CSFFCardDetailTooltip.Equipped", DefaultText = "Equipped" }));
                 if ((recipeStateChange?.UsageChange.x ?? 0) != 0)
                     texts.Add(FormatRateEntry(recipeStateChange?.UsageChange.x ?? 0,
-                        $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Recipe", DefaultText = "Recipe" }.ToString()} {changeRecipe.ActionName}"));
+                        $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Recipe", DefaultText = "Recipe" }} {changeRecipe.ActionName}"));
             }
 
             if (cardModel.FuelCapacity &&
@@ -497,7 +497,7 @@ namespace CSFFCardDetailTooltip
                         { LocalizationKey = "CSFFCardDetailTooltip.Equipped", DefaultText = "Equipped" }));
                 if ((recipeStateChange?.FuelChange.x ?? 0) != 0)
                     texts.Add(FormatRateEntry(recipeStateChange?.FuelChange.x ?? 0,
-                        $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Recipe", DefaultText = "Recipe" }.ToString()} {changeRecipe.ActionName}"));
+                        $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Recipe", DefaultText = "Recipe" }} {changeRecipe.ActionName}"));
             }
 
             if (cardModel.Progress && cardModel.Progress.Show(__instance.ContainedLiquid, __instance.CurrentProgress))
@@ -532,7 +532,7 @@ namespace CSFFCardDetailTooltip
                         { LocalizationKey = "CSFFCardDetailTooltip.Equipped", DefaultText = "Equipped" }));
                 if ((recipeStateChange?.ChargesChange.x ?? 0) != 0)
                     texts.Add(FormatRateEntry(recipeStateChange?.ChargesChange.x ?? 0,
-                        $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Recipe", DefaultText = "Recipe" }.ToString()} {changeRecipe.ActionName}"));
+                        $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Recipe", DefaultText = "Recipe" }} {changeRecipe.ActionName}"));
             }
 
             if (__instance.IsLiquidContainer && __instance.ContainedLiquid)
@@ -553,10 +553,10 @@ namespace CSFFCardDetailTooltip
                             !(__instance.CurrentProducedLiquids.get_Item(i).LiquidCard !=
                               __instance.ContainedLiquidModel))
                             texts.Add(FormatRateEntry(__instance.CurrentProducedLiquids.get_Item(i).Quantity.x,
-                                $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Producing", DefaultText = "Producing" }.ToString()} {__instance.CurrentProducedLiquids.get_Item(i).LiquidCard.CardName.ToString()}"));
+                                $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Producing", DefaultText = "Producing" }} {__instance.CurrentProducedLiquids.get_Item(i).LiquidCard.CardName}"));
                 if ((recipeStateChange?.ModifyLiquid ?? false) && (recipeStateChange?.LiquidQuantityChange.x ?? 0) != 0)
                     texts.Add(FormatRateEntry(recipeStateChange?.LiquidQuantityChange.x ?? 0,
-                        $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Recipe", DefaultText = "Recipe" }.ToString()} {changeRecipe.ActionName}"));
+                        $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Recipe", DefaultText = "Recipe" }} {changeRecipe.ActionName}"));
             }
 
             if (cardModel.SpecialDurability1 &&
@@ -590,7 +590,7 @@ namespace CSFFCardDetailTooltip
                         { LocalizationKey = "CSFFCardDetailTooltip.Equipped", DefaultText = "Equipped" }));
                 if ((recipeStateChange?.Special1Change.x ?? 0) != 0)
                     texts.Add(FormatRateEntry(recipeStateChange?.Special1Change.x ?? 0,
-                        $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Recipe", DefaultText = "Recipe" }.ToString()} {changeRecipe.ActionName}"));
+                        $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Recipe", DefaultText = "Recipe" }} {changeRecipe.ActionName}"));
             }
 
             if (cardModel.SpecialDurability2 &&
@@ -624,7 +624,7 @@ namespace CSFFCardDetailTooltip
                         { LocalizationKey = "CSFFCardDetailTooltip.Equipped", DefaultText = "Equipped" }));
                 if ((recipeStateChange?.Special2Change.x ?? 0) != 0)
                     texts.Add(FormatRateEntry(recipeStateChange?.Special2Change.x ?? 0,
-                        $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Recipe", DefaultText = "Recipe" }.ToString()} {changeRecipe.ActionName}"));
+                        $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Recipe", DefaultText = "Recipe" }} {changeRecipe.ActionName}"));
             }
 
             if (cardModel.SpecialDurability3 &&
@@ -658,7 +658,7 @@ namespace CSFFCardDetailTooltip
                         { LocalizationKey = "CSFFCardDetailTooltip.Equipped", DefaultText = "Equipped" }));
                 if ((recipeStateChange?.Special3Change.x ?? 0) != 0)
                     texts.Add(FormatRateEntry(recipeStateChange?.Special3Change.x ?? 0,
-                        $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Recipe", DefaultText = "Recipe" }.ToString()} {changeRecipe.ActionName}"));
+                        $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Recipe", DefaultText = "Recipe" }} {changeRecipe.ActionName}"));
             }
 
             if (cardModel.SpecialDurability4 &&
@@ -692,7 +692,7 @@ namespace CSFFCardDetailTooltip
                         { LocalizationKey = "CSFFCardDetailTooltip.Equipped", DefaultText = "Equipped" }));
                 if ((recipeStateChange?.Special4Change.x ?? 0) != 0)
                     texts.Add(FormatRateEntry(recipeStateChange?.Special4Change.x ?? 0,
-                        $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Recipe", DefaultText = "Recipe" }.ToString()} {changeRecipe.ActionName}"));
+                        $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Recipe", DefaultText = "Recipe" }} {changeRecipe.ActionName}"));
             }
 
             if (cardModel.IsWeapon)

@@ -364,7 +364,7 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
                 }
 
                 result.AppendLine(
-                    $"{spaces}{bodyPartName.ToString()}: {resultReport.GetBodyLocationHitWeight(bodyPart) / resultReport.TotalWeight * 100f:0}% ({LcStr("CSFFCardDetailTooltip.Encounter.TotalDefense", "Total Defense")}: {enemyDefenses[(int)bodyPart]:0})");
+                    $"{spaces}{bodyPartName}: {resultReport.GetBodyLocationHitWeight(bodyPart) / resultReport.TotalWeight * 100f:0}% ({LcStr("CSFFCardDetailTooltip.Encounter.TotalDefense", "Total Defense")}: {enemyDefenses[(int)bodyPart]:0})");
                 result.AppendLine(
                     $"{spaces}| {string.Join(" | ", mapping.Select(m => $"{VectorMath.RangeIntersect(playerActionDamage, m.Item1).RangeLength() / playerActionDamage.RangeLength() * 100f:0}%"))} |");
             }
@@ -396,7 +396,7 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
     .AppendLine($"{spaces}{LcStr("CSFFCardDetailTooltip.Encounter.WeaponLengthBonus", "Weapon Length Bonus")}: {report.PlayerActionReachClashValue}");
         if (report.PlayerClashStatsAddedValues != null && report.PlayerClashStatsAddedValues.Count > 0)
             result.AppendLine(
-                $"{spaces}{LcStr("CSFFCardDetailTooltip.Encounter.StatusBonus", "Status Bonus")}:\n{string.Join("\n", report.PlayerClashStatsAddedValues.ToArray().Select(v => $"{spaces} {v.Stat.GameName.ToString()}: {ColorFloat(v.Value)}"))}");
+                $"{spaces}{LcStr("CSFFCardDetailTooltip.Encounter.StatusBonus", "Status Bonus")}:\n{string.Join("\n", report.PlayerClashStatsAddedValues.ToArray().Select(v => $"{spaces} {v.Stat.GameName}: {ColorFloat(v.Value)}"))}");
         if (encounter.PlayerHidden)
         {
             report.PlayerClashStealthBonus = action.GetClashStealthBonus(_WithRandomness);
@@ -576,7 +576,7 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
             if (wounds[0].DroppedCards.Length == 0) return "";
             if (playerBodyLocationHit.GetBodyLocationHitWeight(bodyPart) > 0)
                 result.AppendLine(
-                    $"{new string(' ', indent)}{new LocalizedString { LocalizationKey = $"CSFFCardDetailTooltip.BodyParts.{bodyPart}", DefaultText = bodyPart.ToString() }.ToString()}({playerBodyLocationHit.GetBodyLocationHitWeight(bodyPart) / playerBodyLocationHit.TotalWeight * 100f:0.#}%): {wounds.Select(w => w.DroppedCards[0].CardName.ToString()).Join()} ({LcStr("CSFFCardDetailTooltip.Encounter.AttackDefenseRatio", "Attack-Defense Ratio")}: {currentRoundEnemyDamageReport.EnemyDamage}:{currentRoundEnemyDamageReport.PlayerDefense})");
+                    $"{new string(' ', indent)}{new LocalizedString { LocalizationKey = $"CSFFCardDetailTooltip.BodyParts.{bodyPart}", DefaultText = bodyPart.ToString() }}({playerBodyLocationHit.GetBodyLocationHitWeight(bodyPart) / playerBodyLocationHit.TotalWeight * 100f:0.#}%): {wounds.Select(w => w.DroppedCards[0].CardName.ToString()).Join()} ({LcStr("CSFFCardDetailTooltip.Encounter.AttackDefenseRatio", "Attack-Defense Ratio")}: {currentRoundEnemyDamageReport.EnemyDamage}:{currentRoundEnemyDamageReport.PlayerDefense})");
         }
 
         return result.ToString();
@@ -649,9 +649,9 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
         if (currentLiquidDrop.LiquidCard)
         {
             string liquidDropText =
-                $"{FormatMinMaxValue(currentLiquidDrop.Quantity)} ({currentLiquidDrop.LiquidCard.CardType}){currentLiquidDrop.LiquidCard.CardName.ToString()}";
+                $"{FormatMinMaxValue(currentLiquidDrop.Quantity)} ({currentLiquidDrop.LiquidCard.CardType}){currentLiquidDrop.LiquidCard.CardName}";
             texts.Add(FormatBasicEntry(
-                $"<size=55%>{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Action.LiquidDrops", DefaultText = "Liquid Drops" }.ToString()}</size>",
+                $"<size=55%>{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Action.LiquidDrops", DefaultText = "Liquid Drops" }}</size>",
                 "<size=55%>" + liquidDropText + "</size>", indent: indent));
         }
 
@@ -714,73 +714,45 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
         GameManager gm = MBSingleton<GameManager>.Instance;
 
         if (gm.CurrentActionModifiers != null && gm.CurrentActionModifiers.Count > 0)
-        {
-            for (int i = 0; i < gm.CurrentActionModifiers.Count; i++)
-            {
-                var cur = gm.CurrentActionModifiers[i];
+            foreach (var cur in gm.CurrentActionModifiers)
                 if (cur.DurationModifier != 0 && cur.AppliesToAction(action, gm.NotInBase, _ReceivingCard, null))
-                {
                     list.Add(cur);
-                }
-            }
-        }
 
         if (action.BpActionModifiers != null)
-        {
-            for (int k = 0; k < action.BpActionModifiers.Count; k++)
-            {
-                if (action.BpActionModifiers[k]?.DurationModifier != 0 && action.BpActionModifiers[k].AppliesToAction(action, gm.NotInBase, _ReceivingCard, null))
-                {
-                    list.Add(action.BpActionModifiers[k]);
-                }
-            }
-        }
+            foreach (var cur in action.BpActionModifiers)
+                if (cur.DurationModifier != 0 && cur.AppliesToAction(action, gm.NotInBase, _ReceivingCard, null))
+                    list.Add(cur);
 
         if ((bool)_ReceivingCard && (bool)_ReceivingCard.CardModel)
         {
-            if (_ReceivingCard.CardModel.ActionModifiers != null)
-            {
-                for (int l = 0; l < _ReceivingCard.CardModel.ActionModifiers.Length; l++)
-                {
-                    if (_ReceivingCard.CardModel.ActionModifiers[l]?.DurationModifier != 0 && _ReceivingCard.CardModel.ActionModifiers[l].AppliesToAction(action, gm.NotInBase, _ReceivingCard, null))
-                    {
-                        list.Add(_ReceivingCard.CardModel.ActionModifiers[l]);
-                    }
-                }
-            }
+            foreach (var cur in _ReceivingCard.CardModel.ActionModifiers)
+                if (cur.DurationModifier != 0 && cur.AppliesToAction(action, gm.NotInBase, _ReceivingCard, null))
+                    list.Add(cur);
 
             CardTag[] cardTags = _ReceivingCard.CardModel.CardTags;
             if (cardTags != null && cardTags.Length != 0)
             {
-                for (int m = 0; m < cardTags.Length; m++)
+                foreach (var tags in cardTags)
                 {
-                    if (!cardTags[m] || cardTags[m].ActionModifiers == null || cardTags[m].ActionModifiers.Length == 0)
-                    {
-                        continue;
-                    }
-
-                    for (int n = 0; n < cardTags[m].ActionModifiers.Length; n++)
-                    {
-                        if (cardTags[m].ActionModifiers[n]?.DurationModifier != 0 && cardTags[m].ActionModifiers[n].AppliesToAction(action, gm.NotInBase, _ReceivingCard, null))
-                        {
-                            list.Add(cardTags[m].ActionModifiers[n]);
-                        }
-                    }
+                    if (!tags || tags.ActionModifiers == null || tags.ActionModifiers.Length == 0) continue;
+                    foreach (var cur in tags.ActionModifiers)
+                        if (cur.DurationModifier != 0 && cur.AppliesToAction(action, gm.NotInBase, _ReceivingCard, null))
+                            list.Add(cur);
                 }
             }
         }
+
+        LocalizedString defaultModifySource = new() { LocalizationKey = "CSFFCardDetailTooltip.NoNameModifier", DefaultText = "Unknown Modifier" };
         return list.ConvertAll((mod) =>
         {
             string label = mod.ActionAddedSuffix;
             if (label.Trim() == "")
             {
-                label = DefaultModifySource;
+                label = defaultModifySource;
             }
             return FormatBasicEntry($"{ColorFloat(mod.DurationModifier)}", label, indent: indent + 2);
         }).Join(delimiter: "\n");
     }
-
-    private static LocalizedString DefaultModifySource = new() { LocalizationKey = "CSFFCardDetailTooltip.NoNameModifier", DefaultText = "Unknown Modifier" };
 
     private static string FormatStateChange(CardStateChange stateChange, InGameCardBase fromCard, int indent = 0)
     {
@@ -847,7 +819,7 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
                 new LocalizedString
                 { LocalizationKey = "CSFFCardDetailTooltip.TransformInto", DefaultText = "Transform into" }
                     .ToString(),
-                $"{stateChange.TransformInto.CardName.ToString()}", indent: indent + 2));
+                $"{stateChange.TransformInto.CardName}", indent: indent + 2));
         }
         else if (stateChange.ModType == CardModifications.Destroy)
         {
@@ -886,10 +858,10 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
         {
             if (statModifier.ValueModifier.magnitude != 0)
                 texts.Add(FormatBasicEntry($"{FormatMinMaxValue(statModifier.ValueModifier)}",
-                    $"{statModifier.Stat.GameName.ToString()}", indent: indent));
+                    $"{statModifier.Stat.GameName}", indent: indent));
             if (statModifier.RateModifier.magnitude != 0)
                 texts.Add(FormatBasicEntry($"{FormatMinMaxValue(statModifier.RateModifier)}",
-                    $"{statModifier.Stat.GameName.ToString()} {new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Rate", DefaultText = "Rate" }.ToString()}",
+                    $"{statModifier.Stat.GameName} {new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Rate", DefaultText = "Rate" }}",
                     indent: indent));
         }
 
@@ -912,17 +884,18 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
         };
     }
 
-    public static string ColorFloat(float num, bool asPercent = false, bool reverseColor = false)
+    public static string ColorFloat(float num, bool asPercent = false, bool isMultiply = false)
     {
-        return asPercent
-            ? $"{ColorTagFromFloat(reverseColor ? -num : num)}{num,-3:+0.##%;-0.##%;+0}</color>"
-            : $"{ColorTagFromFloat(reverseColor ? -num : num)}{num,-3:+0.##;-0.##;+0}</color>";
+        string postFix = asPercent ? "%" : "";
+        string[] preFix = isMultiply ? ["x", "x-"] : ["+", "-"];
+        string format = $"{preFix[0]}0.##{postFix};{preFix[1]}0.##{postFix};-";
+        return $"{ColorTagFromFloat(num)}{num.ToString(format),-3}</color>";
     }
 
     public static string FormatWeight(float weight)
     {
         return
-            $"<color=\"yellow\">{weight:0.#}</color> {new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.FormatWeight.Weight", DefaultText = "Weight" }.ToString()}";
+            $"<color=\"yellow\">{weight:0.#}</color> {new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.FormatWeight.Weight", DefaultText = "Weight" }}";
     }
 
     public static string FormatProgressAndRate(float current, float max, string name, float rate,
@@ -1006,8 +979,8 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
     public static string TimeSpanFormat(TimeSpan ts)
     {
         return ts.Days >= 1
-            ? $"{ts.Days:0}{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.d", DefaultText = "d" }.ToString()}{ts.Hours:0}{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.h", DefaultText = "h" }.ToString()}"
-            : $"{ts.Hours:0}{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.h", DefaultText = "h" }.ToString()}";
+            ? $"{ts.Days:0}{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.d", DefaultText = "d" }}{ts.Hours:0}{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.h", DefaultText = "h" }}"
+            : $"{ts.Hours:0}{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.h", DefaultText = "h" }}";
     }
 
     public static string FormatRate(float value, float current, float max, float min = 0,
@@ -1022,7 +995,7 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
             float time = Math.Abs((max - current) / value);
             TimeSpan timeSpan = new(0, (int)(Math.Ceiling(time) * 15), 0);
             est =
-                $" ({new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.est.", DefaultText = "est." }.ToString()} {Math.Ceiling(time)}t/{TimeSpanFormat(timeSpan)})";
+                $" ({new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.est.", DefaultText = "est." }} {Math.Ceiling(time)}t/{TimeSpanFormat(timeSpan)})";
             if (stat != null && currentCard != null && stat.HasActionOnFull && stat.OnFull != null)
             {
                 statOnFullZeroTitle = FormatBasicEntry(new LocalizedString
@@ -1041,7 +1014,7 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
             float time = Math.Abs((current - min) / value);
             TimeSpan timeSpan = new(0, (int)(Math.Ceiling(time) * 15), 0);
             est =
-                $" ({new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.est.", DefaultText = "est." }.ToString()} {Math.Ceiling(time)}t/{TimeSpanFormat(timeSpan)})";
+                $" ({new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.est.", DefaultText = "est." }} {Math.Ceiling(time)}t/{TimeSpanFormat(timeSpan)})";
             if (stat != null && currentCard != null && stat.HasActionOnZero && stat.OnZero != null)
             {
                 statOnFullZeroTitle = FormatBasicEntry(new LocalizedString
@@ -1062,7 +1035,7 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
         List<string> texts =
         [
             FormatTooltipEntry(value,
-                $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Rate", DefaultText = "Rate" }.ToString()}<size=70%>{est}</size>",
+                $"{new LocalizedString { LocalizationKey = "CSFFCardDetailTooltip.Rate", DefaultText = "Rate" }}<size=70%>{est}</size>",
                 2)
         ];
         if (!string.IsNullOrWhiteSpace(statOnFullZeroTitle)) texts.Add(statOnFullZeroTitle);
@@ -1071,14 +1044,14 @@ public static void GetWoundsForSeverity_il2cpp(this PlayerWounds playerWounds, W
         return texts.Join(delimiter: "\n");
     }
 
-    public static string FormatRateEntry(float value, string name)
+    public static string FormatRateEntry(float value, string name, bool isMultiply = false)
     {
-        return FormatTooltipEntry(value, name, 4);
+        return FormatTooltipEntry(value, name, 4, isMultiply);
     }
 
-    public static string FormatTooltipEntry(float value, string name, int indent = 0)
+    public static string FormatTooltipEntry(float value, string name, int indent = 0, bool isMultiply = false)
     {
-        return $"<indent={indent / 2.2:0.##}em>{ColorFloat(value)} {name}</indent>";
+        return $"<indent={indent / 2.2:0.##}em>{ColorFloat(value, isMultiply: isMultiply)} {name}</indent>";
     }
 
     public static string FormatTooltipEntry(OptionalFloatValue value, string name, int indent = 0)
